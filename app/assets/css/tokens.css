@@ -1,0 +1,58 @@
+/*
+ * Tokens visuais do Varal (spec 08, seções 3 a 6).
+ *
+ * Fonte da verdade: varal-docs/docs/specs/08-identidade-visual.md.
+ * Mantido igual no varal-panel-web e no varal-admin-web (mesmos nomes
+ * `--color-*`). Mudança de token é feita na spec e nos dois apps.
+ *
+ * Tema claro fixo: não há modo escuro no MVP.
+ */
+:root {
+  /* Cores (spec 08, seção 3) */
+  --color-primary: #be185d;
+  --color-primary-ink: #ffffff;
+  --color-primary-soft: #fce7f3;
+  --color-primary-deep: #831843;
+  --color-bg: #f3f4f2;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f6f7f5;
+  --color-text: #111315;
+  --color-text-muted: #5a6067;
+  --color-border: #d9dcd8;
+  --color-border-strong: #7a8085;
+  --color-focus: #111315;
+
+  /* Erro de formulário (spec 08, seção 4) */
+  --color-error: #b91c1c;
+
+  /* Status (spec 08, seção 4): fundo e texto */
+  --color-status-new-bg: #be185d;
+  --color-status-new-text: #ffffff;
+  --color-status-preparing-bg: #fde68a;
+  --color-status-preparing-text: #713f12;
+  --color-status-ready-bg: #bbf7d0;
+  --color-status-ready-text: #14532d;
+  --color-status-late-bg: #fecaca;
+  --color-status-late-text: #7f1d1d;
+  --color-status-cancelled-bg: #e2e8f0;
+  --color-status-cancelled-text: #334155;
+
+  /* Tipografia (spec 08, seção 5) */
+  --font-text: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-size-13: 0.8125rem;
+  --font-size-15: 0.9375rem;
+  --font-size-17: 1.0625rem;
+  --font-size-20: 1.25rem;
+  --font-size-24: 1.5rem;
+  --font-size-32: 2rem;
+
+  /* Cantos por função (spec 08, seção 6) */
+  --radius-chip: 6px;
+  --radius-control: 10px;
+  --radius-card: 12px;
+
+  /* Alvos de toque (spec 08, seção 2) */
+  --size-touch-min: 48px;
+  --size-button-primary-min: 52px;
+}

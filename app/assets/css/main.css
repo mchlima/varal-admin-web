@@ -1,0 +1,145 @@
+/*
+ * Estilos globais do admin: Tailwind 4 + Nuxt UI 4 com a identidade visual
+ * da spec 08. Os valores vêm de `tokens.css` (os mesmos `--color-*` do
+ * painel); aqui eles só são ligados às variáveis `--ui-*` do Nuxt UI.
+ */
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+/* Fontes servidas pelo próprio app (spec 08, seção 5) */
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+@import '@fontsource/bricolage-grotesque/600.css';
+@import '@fontsource/bricolage-grotesque/800.css';
+
+@import './tokens.css';
+
+/*
+ * Paletas usadas pelo Nuxt UI para gerar `--ui-color-<cor>-<tom>`
+ * (`app.config.ts` → `ui.colors`). Os tons-chave são os tokens da spec 08;
+ * os demais são interpolados só para estados auxiliares (hover, fundo leve).
+ */
+@theme static {
+  /* Framboesa: 100 = primary-soft, 700 = primary, 900 = primary-deep */
+  --color-raspberry-50: #fdf2f8;
+  --color-raspberry-100: #fce7f3;
+  --color-raspberry-200: #fbcfe8;
+  --color-raspberry-300: #f9a8d4;
+  --color-raspberry-400: #f472b6;
+  --color-raspberry-500: #ec4899;
+  --color-raspberry-600: #db2777;
+  --color-raspberry-700: #be185d;
+  --color-raspberry-800: #9d174d;
+  --color-raspberry-900: #831843;
+  --color-raspberry-950: #500724;
+
+  /* Neutro esverdeado: 50 = surface-muted, 100 = bg, 300 = border,
+     600 = text-muted, 900 = text */
+  --color-sage-50: #f6f7f5;
+  --color-sage-100: #f3f4f2;
+  --color-sage-200: #e7e9e6;
+  --color-sage-300: #d9dcd8;
+  --color-sage-400: #a3a8a6;
+  --color-sage-500: #7a8085;
+  --color-sage-600: #5a6067;
+  --color-sage-700: #40454b;
+  --color-sage-800: #272a2e;
+  --color-sage-900: #111315;
+  --color-sage-950: #0a0b0c;
+}
+
+/* Fontes e escala tipográfica da spec 08 (13, 15, 17, 20, 24, 32 px) */
+@theme inline {
+  --font-sans: var(--font-text);
+  --font-heading: var(--font-display);
+
+  --text-xs: var(--font-size-13);
+  --text-xs--line-height: 1.4;
+  --text-sm: var(--font-size-15);
+  --text-sm--line-height: 1.45;
+  --text-base: var(--font-size-17);
+  --text-base--line-height: 1.5;
+  --text-lg: var(--font-size-20);
+  --text-lg--line-height: 1.35;
+  --text-xl: var(--font-size-24);
+  --text-xl--line-height: 1.3;
+  --text-2xl: var(--font-size-32);
+  --text-2xl--line-height: 1.2;
+  --text-3xl: 2.5rem;
+  --text-3xl--line-height: 1.15;
+}
+
+/*
+ * Tema do Nuxt UI ligado aos tokens. Fica fora de `@layer` de propósito,
+ * para prevalecer sobre os valores padrão da biblioteca (que ficam em
+ * `@layer theme`). Tema claro fixo: não há `.dark`.
+ */
+:root {
+  --ui-primary: var(--color-primary);
+  --ui-success: var(--color-status-ready-text);
+  --ui-warning: var(--color-status-preparing-text);
+  --ui-error: var(--color-error);
+
+  --ui-text-dimmed: var(--color-text-muted);
+  --ui-text-muted: var(--color-text-muted);
+  --ui-text-toned: var(--color-text-muted);
+  --ui-text: var(--color-text);
+  --ui-text-highlighted: var(--color-text);
+  --ui-text-inverted: var(--color-primary-ink);
+
+  --ui-bg: var(--color-surface);
+  --ui-bg-muted: var(--color-surface-muted);
+  --ui-bg-elevated: var(--color-bg);
+  --ui-bg-accented: var(--color-border);
+  --ui-bg-inverted: var(--color-text);
+
+  --ui-border: var(--color-border);
+  --ui-border-muted: var(--color-border);
+  /* Borda de campos e botões de contorno: 3:1 sobre branco (spec 08, seção 8) */
+  --ui-border-accented: var(--color-border-strong);
+  --ui-border-inverted: var(--color-text);
+
+  /* rounded-md = 6 px (chip); controles e cartões usam os tokens de raio */
+  --ui-radius: 0.25rem;
+
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-text);
+  font-size: var(--font-size-17);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+/* Algarismos de largura fixa em números (spec 08, princípio 5) */
+table,
+input,
+output,
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Foco de teclado sempre visível, na cor da spec (spec 08, seção 8) */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
