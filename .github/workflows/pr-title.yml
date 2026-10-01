@@ -1,0 +1,38 @@
+name: Título do PR
+
+# Confere se o título do PR segue o Conventional Commits (o merge é por squash,
+# então o título vira a mensagem do commit). No plano free é só um aviso.
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  semantic-title:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            refactor
+            test
+            perf
+            style
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+          subjectPattern: ^[^A-Z].+[^.]$
+          subjectPatternError: |
+            A descrição "{subject}" do título "{title}" deve começar com minúscula
+            e não terminar com ponto.
