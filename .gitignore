@@ -17,3 +17,8 @@ coverage/
 # Sistema e editores
 .DS_Store
 *.log
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
