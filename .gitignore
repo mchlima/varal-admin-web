@@ -9,7 +9,7 @@
 
 # Dependências e builds
 node_modules/
-dist/
+dist
 .output/
 .nuxt/
 coverage/
