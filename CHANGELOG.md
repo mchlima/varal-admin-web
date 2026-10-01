@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/mchlima/varal-admin-web/compare/v0.1.0...v0.2.0) (2026-10-01)
+
+
+### Features
+
+* **admin:** telas do admin da plataforma (fase 3) ([#12](https://github.com/mchlima/varal-admin-web/issues/12)) ([7bbb597](https://github.com/mchlima/varal-admin-web/commit/7bbb597b9e270b15f0a0afb79da637df91837ef0))
+
 ## 0.1.0 (2026-10-01)
 
 
