@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/mchlima/varal-admin-web/compare/v0.2.0...v0.2.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* **ui:** reserva a linha do erro nos campos validados ([#14](https://github.com/mchlima/varal-admin-web/issues/14)) ([ff5c897](https://github.com/mchlima/varal-admin-web/commit/ff5c897c54fff54b09ae74443b1430409c717e3b))
+
 ## [0.2.0](https://github.com/mchlima/varal-admin-web/compare/v0.1.0...v0.2.0) (2026-10-01)
 
 
