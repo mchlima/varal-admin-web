@@ -1,0 +1,15 @@
+.nuxt/
+.output/
+.data/
+dist/
+coverage/
+node_modules/
+.worktrees/
+pnpm-lock.yaml
+app/api/schema.d.ts
+public/
+CHANGELOG.md
+AGENTS.md
+CLAUDE.md
+.claude/
+.githooks/
