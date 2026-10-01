@@ -24,6 +24,7 @@ Specs e decisões do produto: [varal-docs](https://github.com/mchlima/varal-docs
 | `pnpm typecheck`      | Checagem de tipos (`vue-tsc` via `nuxt typecheck`)                     |
 | `pnpm test`           | Testes (Vitest + `@nuxt/test-utils`)                                   |
 | `pnpm test:watch`     | Testes em modo observação                                              |
+| `pnpm test:e2e`       | Playwright (Chromium desktop) contra a API local; fora da CI           |
 | `scripts/worktree.sh` | Cria, lista e remove worktrees de desenvolvimento (veja abaixo)        |
 
 ## Ambiente
@@ -49,12 +50,44 @@ O `new` exige `core.hooksPath=.githooks`, cria a branch a partir de `origin/main
 
 `pnpm gen:api` lê `../varal-web-api/openapi.json` (ao lado do checkout principal, mesmo rodando de um worktree) ou o caminho/URL em `OPENAPI_SOURCE`, e grava `app/api/schema.d.ts`. O arquivo gerado é commitado e nunca editado à mão (RN-01.11).
 
-O plugin `app/plugins/api.ts` expõe o cliente `openapi-fetch` como `$api`, com `credentials: 'include'`:
+O plugin `app/plugins/api.ts` expõe o cliente `openapi-fetch` (`app/api/client.ts`) como `$api`:
 
 ```ts
 const { $api } = useNuxtApp()
-const { data, error } = await $api.GET('/api/v1/...')
+const { data, error } = await $api.GET('/api/v1/admin/emails/usage')
+if (error) mensagem.value = toApiError(error).message
 ```
+
+- `credentials: 'include'`: a sessão vive nos cookies `httpOnly` do admin (`__Host-varal_admin_at` e `__Secure-varal_admin_rt`), nunca no JavaScript.
+- `X-Device-Id` em toda requisição: UUID gerado uma vez e guardado no `localStorage` (`app/utils/device-id.ts`); se o armazenamento falhar, vale só enquanto a página estiver aberta.
+- **Renovação:** um 401 dispara `POST /api/v1/admin/auth/refresh` com `fetch` direto, fora do middleware, e a requisição é repetida uma vez. Requisições simultâneas compartilham a mesma renovação. Login, renovação, logout, "esqueci a senha" e redefinição não disparam renovação. Se ela falhar, a sessão é limpa e a tela vai para `/entrar?voltar=...`.
+- **Erros:** `toApiError()` (`app/utils/api-error.ts`) lê o `ErrorResponse` da API (`code` e `message` em português, campos de `VALIDATION_FAILED`) e traduz falha de rede.
+
+## Sessão e telas
+
+- Store Pinia `useSessionStore` (`app/stores/session.ts`): perfil de `GET /admin/auth/me`, `login`, `logout` e `changePassword`.
+- Middleware global `app/middleware/auth.global.ts`: páginas exigem sessão por padrão; `definePageMeta({ access: 'guest' })` só sem sessão (`/entrar`, que manda o logado para `/`) e `access: 'public'` com ou sem (`/esqueci-a-senha`, `/definir-senha`).
+- Rotas da spec 01, seção 14.1: `/entrar`, `/esqueci-a-senha` (mensagem sempre igual, RN-01.03), `/definir-senha` (lê `#token=...&tipo=convite|redefinicao`, guarda o token só em memória e apaga o fragmento da URL), `/`, `/organizacoes`, `/comunicados`, `/metricas`, `/emails`, `/auditoria`, `/usuarios` e `/papeis`. Telas sem API ainda mostram "Em construção".
+- Início e E-mails mostram o consumo de e-mail do mês (`GET /admin/emails/usage`, RN-01.04): normal, alerta a partir de 8.000 e crítico em 10.000, sempre com texto e ícone.
+- Troca de senha no menu do usuário (nome no rodapé da navegação lateral ou no cabeçalho do celular).
+- Layout (`app/layouts/default.vue`): navegação lateral a partir de 1024 px; abaixo, cabeçalho e menu inferior com Início, Organizações, Comunicados e "Mais" (spec 08, seção 7).
+
+## Testes de ponta a ponta
+
+`pnpm test:e2e` roda o Playwright (projeto `desktop-chromium`) contra o admin em `http://localhost:$PORT` (sobe o `pnpm dev` se não estiver rodando) e uma API local com o seed (`admin@varal.local`, senha `varal12345`). Por depender da API e do banco, **não roda na CI**.
+
+```sh
+pnpm exec playwright install chromium   # uma vez por máquina
+# no varal-web-api: scripts/worktree.sh new ... && pnpm dev, com a porta do admin em CORS_ORIGINS
+# aqui: NUXT_PUBLIC_API_BASE_URL no .env.local apontando para essa API
+pnpm test:e2e
+E2E_MAILPIT_URL=http://localhost:8025 pnpm test:e2e   # inclui "esqueci a senha" pelo Mailpit
+```
+
+- Os testes rodam em série: a troca e a redefinição de senha encerram as outras sessões do admin. Ambos definem a mesma senha do seed, para o ambiente não mudar.
+- O fluxo com Mailpit é opcional porque a API aceita no máximo 3 links de redefinição por usuário por hora (RN-01.02). Para os links apontarem para este worktree, use `ADMIN_URL=http://localhost:$PORT` no `.env.local` da API.
+- A API limita troca e redefinição de senha a 10 requisições a cada 15 min por IP (`429 RATE_LIMITED`, contador em memória). Cada rodada usa 2 a 4; se várias rodadas seguidas derem 429, espere ou reinicie a API local.
+- Outros usuários: `E2E_ADMIN_EMAIL` e `E2E_ADMIN_PASSWORD`.
 
 ## Identidade visual
 
