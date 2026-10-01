@@ -107,10 +107,10 @@ async function submit() {
       >
         <FormErrorAlert v-if="formError" :message="formError" />
         <slot />
-        <UFormField v-if="statusOptions" :label="statusLabel" name="status">
+        <ValidatedField v-if="statusOptions" :label="statusLabel" name="status">
           <URadioGroup v-model="status" :items="radioItems" />
-        </UFormField>
-        <UFormField :label="reasonLabel" name="reason" :help="reasonHelp">
+        </ValidatedField>
+        <ValidatedField :label="reasonLabel" name="reason" :description="reasonHelp">
           <UTextarea
             v-model="state.reason"
             :rows="3"
@@ -118,7 +118,7 @@ async function submit() {
             autoresize
             class="w-full"
           />
-        </UFormField>
+        </ValidatedField>
       </UForm>
     </template>
     <template #footer>

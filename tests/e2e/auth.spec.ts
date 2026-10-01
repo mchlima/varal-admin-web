@@ -119,3 +119,37 @@ test('troca de senha pelo menu do usuário e logout', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveURL(/\/entrar$/)
 })
+
+test('clique no Entrar logo depois de corrigir a senha não se perde', async ({ page }) => {
+  await page.goto('/entrar')
+  const submit = page.getByRole('button', { name: 'Entrar' })
+  await submit.click()
+  await expect(page.getByText('Informe a senha.')).toBeVisible()
+
+  await page.getByLabel('E-mail').fill(EMAIL)
+  await page.getByLabel('Senha', { exact: true }).fill(PASSWORD)
+  // O foco continua na senha. Clique como o de uma pessoa: o mousedown tira o foco e dispara a
+  // validação, que apaga o erro; o mouseup vem um instante depois, no mesmo ponto da tela.
+  const box = await submit.boundingBox()
+  expect(box).not.toBeNull()
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height - 8)
+  await page.mouse.down()
+  await page.waitForTimeout(150)
+  await page.mouse.up()
+
+  await expect(page).toHaveURL(/\/$/)
+})
+
+test('corrigir um campo e sair dele não move o botão de enviar', async ({ page }) => {
+  await page.goto('/entrar')
+  const submit = page.getByRole('button', { name: 'Entrar' })
+  const initial = await submit.boundingBox()
+  await submit.click()
+  await expect(page.getByText('Informe o e-mail.')).toBeVisible()
+  expect(await submit.boundingBox()).toEqual(initial)
+
+  await page.getByLabel('E-mail').fill(EMAIL)
+  await page.getByLabel('E-mail').blur()
+  await expect(page.getByText('Informe o e-mail.')).toBeHidden()
+  expect(await submit.boundingBox()).toEqual(initial)
+})

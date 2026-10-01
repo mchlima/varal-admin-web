@@ -74,7 +74,7 @@ async function submit() {
         @submit="submit"
       >
         <FormErrorAlert v-if="formError" :message="formError" />
-        <UFormField label="E-mail" name="email">
+        <ValidatedField label="E-mail" name="email">
           <UInput
             v-model="state.email"
             type="email"
@@ -83,7 +83,7 @@ async function submit() {
             autofocus
             class="w-full"
           />
-        </UFormField>
+        </ValidatedField>
         <UButton type="submit" label="Enviar link" block :loading="submitting" />
       </UForm>
       <UButton

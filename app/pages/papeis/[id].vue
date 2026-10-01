@@ -157,10 +157,10 @@ async function remove() {
         <FormErrorAlert v-if="formError" :message="formError" />
         <UCard>
           <div class="flex flex-col gap-4">
-            <UFormField
+            <ValidatedField
               label="Nome"
               name="name"
-              :help="
+              :description="
                 role.isSystem && editable ? 'O nome dos papéis do sistema não muda.' : undefined
               "
             >
@@ -170,8 +170,8 @@ async function remove() {
                 :disabled="!editable || role.isSystem"
                 class="w-full"
               />
-            </UFormField>
-            <UFormField label="Descrição" name="description">
+            </ValidatedField>
+            <ValidatedField label="Descrição" name="description">
               <UTextarea
                 v-model="state.description"
                 maxlength="300"
@@ -180,7 +180,7 @@ async function remove() {
                 :disabled="!editable"
                 class="w-full"
               />
-            </UFormField>
+            </ValidatedField>
           </div>
         </UCard>
 

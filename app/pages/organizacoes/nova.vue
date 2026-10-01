@@ -92,28 +92,28 @@ async function submit() {
       <UCard>
         <template #header><h2 class="text-lg font-semibold">Organização</h2></template>
         <div class="flex flex-col gap-4">
-          <UFormField label="Nome da organização" name="name">
+          <ValidatedField label="Nome da organização" name="name">
             <UInput
               v-model="state.name"
               maxlength="120"
               autocomplete="organization"
               class="w-full"
             />
-          </UFormField>
-          <UFormField
+          </ValidatedField>
+          <ValidatedField
             label="Nome da primeira unidade"
             name="unitName"
-            help="Ex.: Feira da praça. Outras unidades o dono cria depois no painel."
+            description="Ex.: Feira da praça. Outras unidades o dono cria depois no painel."
           >
             <UInput v-model="state.unitName" maxlength="80" class="w-full" />
-          </UFormField>
-          <UFormField label="Situação inicial" name="subscriptionStatus">
+          </ValidatedField>
+          <ValidatedField label="Situação inicial" name="subscriptionStatus">
             <URadioGroup
               v-model="state.subscriptionStatus"
               :items="statusOptions"
               orientation="horizontal"
             />
-          </UFormField>
+          </ValidatedField>
         </div>
       </UCard>
 
@@ -125,10 +125,10 @@ async function submit() {
           </p>
         </template>
         <div class="flex flex-col gap-4">
-          <UFormField label="Nome do dono" name="owner.name">
+          <ValidatedField label="Nome do dono" name="owner.name">
             <UInput v-model="state.ownerName" maxlength="120" autocomplete="off" class="w-full" />
-          </UFormField>
-          <UFormField label="E-mail do dono" name="owner.email">
+          </ValidatedField>
+          <ValidatedField label="E-mail do dono" name="owner.email">
             <UInput
               v-model="state.ownerEmail"
               type="email"
@@ -136,7 +136,7 @@ async function submit() {
               autocomplete="off"
               class="w-full"
             />
-          </UFormField>
+          </ValidatedField>
         </div>
       </UCard>
 

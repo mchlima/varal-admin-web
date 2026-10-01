@@ -72,10 +72,10 @@ async function submit() {
         @submit="submit"
       >
         <FormErrorAlert v-if="formError" :message="formError" />
-        <UFormField label="Nome" name="name">
+        <ValidatedField label="Nome" name="name">
           <UInput v-model="state.name" maxlength="120" autocomplete="off" class="w-full" />
-        </UFormField>
-        <UFormField label="E-mail" name="email">
+        </ValidatedField>
+        <ValidatedField label="E-mail" name="email">
           <UInput
             v-model="state.email"
             type="email"
@@ -83,10 +83,10 @@ async function submit() {
             autocomplete="off"
             class="w-full"
           />
-        </UFormField>
-        <UFormField label="Papéis" name="roleIds">
+        </ValidatedField>
+        <ValidatedField label="Papéis" name="roleIds">
           <UCheckboxGroup v-model="roleIds" :items="roleItems" />
-        </UFormField>
+        </ValidatedField>
         <details class="rounded-(--radius-control) border border-(--color-border) p-3">
           <summary class="min-h-(--size-touch-min) cursor-pointer content-center font-bold">
             Permissões avulsas (opcional)
