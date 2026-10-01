@@ -3,15 +3,25 @@
  * Layout das telas logadas (spec 08, seção 7): navegação lateral a partir de
  * 1024 px; abaixo disso, cabeçalho com o menu do usuário e menu inferior com
  * os três primeiros itens e "Mais".
+ *
+ * RN-02.01: só aparecem os itens que o usuário pode abrir, e uma tela cuja
+ * permissão (`definePageMeta({ permission })`) ele não tem dá lugar ao aviso
+ * de acesso negado, sem chamar a API.
  */
 const route = useRoute()
+const { can } = usePermissions()
 const moreOpen = ref(false)
 
-const primaryItems = NAVIGATION.filter((item) => item.primary)
-const secondaryItems = NAVIGATION.filter((item) => !item.primary)
+const items = computed(() => visibleNavigation(can))
+const primaryItems = computed(() => items.value.filter((item) => item.primary))
+const secondaryItems = computed(() => items.value.filter((item) => !item.primary))
 const moreActive = computed(() =>
-  secondaryItems.some((item) => isNavigationActive(item, route.path)),
+  secondaryItems.value.some((item) => isNavigationActive(item, route.path)),
 )
+const bottomColumns = computed(
+  () => primaryItems.value.length + (secondaryItems.value.length > 0 ? 1 : 0),
+)
+const allowed = computed(() => can(route.meta.permission))
 
 watch(
   () => route.fullPath,
@@ -42,7 +52,7 @@ watch(
 
       <nav aria-label="Navegação principal" class="flex-1 overflow-y-auto">
         <ul class="flex flex-col gap-1">
-          <li v-for="item in NAVIGATION" :key="item.to">
+          <li v-for="item in items" :key="item.to">
             <NuxtLink
               :to="item.to"
               :aria-current="isNavigationActive(item, route.path) ? 'page' : undefined"
@@ -81,7 +91,8 @@ watch(
         tabindex="-1"
         class="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 lg:px-8 lg:py-8"
       >
-        <slot />
+        <slot v-if="allowed" />
+        <NoPermission v-else />
       </main>
     </div>
 
@@ -90,7 +101,7 @@ watch(
       aria-label="Navegação principal"
       class="fixed inset-x-0 bottom-0 z-20 border-t border-(--color-border) bg-(--color-surface) pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
-      <ul class="grid grid-cols-4">
+      <ul class="grid" :style="{ gridTemplateColumns: `repeat(${bottomColumns}, minmax(0, 1fr))` }">
         <li v-for="item in primaryItems" :key="item.to">
           <NuxtLink
             :to="item.to"
@@ -107,7 +118,7 @@ watch(
             <span class="max-w-full text-center leading-tight break-words">{{ item.label }}</span>
           </NuxtLink>
         </li>
-        <li>
+        <li v-if="secondaryItems.length > 0">
           <button
             type="button"
             class="flex min-h-16 w-full flex-col items-center justify-center gap-1 px-1 text-xs font-bold text-(--color-text-muted)"

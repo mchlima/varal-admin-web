@@ -3,6 +3,7 @@ import type { components } from '~/api/schema'
 
 type AdminMe = components['schemas']['AdminMe']
 type Admin = AdminMe['admin']
+type AdminRole = AdminMe['roles'][number]
 type SessionInfo = components['schemas']['SessionInfo']
 
 export type SessionStatus = 'unknown' | 'authenticated' | 'anonymous'
@@ -18,6 +19,9 @@ export const useSessionStore = defineStore('session', () => {
   const { $api, $deviceId } = useNuxtApp()
 
   const admin = ref<Admin | null>(null)
+  const roles = ref<AdminRole[]>([])
+  /** Permissões efetivas (papéis + avulsas, RN-02.02), vindas da API. */
+  const permissions = ref<Permission[]>([])
   const session = ref<SessionInfo | null>(null)
   const status = ref<SessionStatus>('unknown')
 
@@ -27,12 +31,16 @@ export const useSessionStore = defineStore('session', () => {
 
   function apply(me: AdminMe) {
     admin.value = me.admin
+    roles.value = me.roles
+    permissions.value = me.permissions
     session.value = me.session
     status.value = 'authenticated'
   }
 
   function clear() {
     admin.value = null
+    roles.value = []
+    permissions.value = []
     session.value = null
     status.value = 'anonymous'
   }
@@ -53,6 +61,27 @@ export const useSessionStore = defineStore('session', () => {
       }
     })()
     return loading
+  }
+
+  /**
+   * Relê papéis e permissões (RN-02.08: mudanças valem na próxima
+   * requisição). Chamado depois de um 403, para a interface esconder o que o
+   * usuário deixou de poder fazer.
+   */
+  let refreshing: Promise<void> | null = null
+  function refreshProfile(): Promise<void> {
+    if (status.value !== 'authenticated') return Promise.resolve()
+    refreshing ??= (async () => {
+      try {
+        const { data } = await $api.GET('/api/v1/admin/auth/me')
+        if (data) apply(data)
+      } catch {
+        // sem conexão: mantém o que já tinha
+      } finally {
+        refreshing = null
+      }
+    })()
+    return refreshing
   }
 
   async function login(email: string, password: string): Promise<ActionResult> {
@@ -104,10 +133,13 @@ export const useSessionStore = defineStore('session', () => {
 
   return {
     admin,
+    roles,
+    permissions,
     session,
     status,
     isAuthenticated,
     ensureLoaded,
+    refreshProfile,
     login,
     logout,
     changePassword,
