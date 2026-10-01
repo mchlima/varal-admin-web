@@ -6,8 +6,8 @@ Specs e decisões do produto: [varal-docs](https://github.com/mchlima/varal-docs
 
 ## Requisitos
 
-- Node 22.12 ou mais novo
-- pnpm 10 (`corepack enable`)
+- Node 26 (`.nvmrc`; com nvm: `nvm use`)
+- pnpm 10 (`npm install -g pnpm@10`; o Node 26 não traz mais o corepack)
 - Git hooks de bloqueio da `main` ativos no clone: `git config core.hooksPath .githooks`
 
 ## Comandos
