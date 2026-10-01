@@ -83,6 +83,12 @@ export default defineAppConfig({
         base: 'min-h-(--size-touch-min) rounded-(--radius-control)',
       },
     },
+    dropdownMenu: {
+      slots: {
+        // Itens do menu com alvo de toque de 48 px (spec 08, seção 2)
+        item: 'min-h-(--size-touch-min) items-center',
+      },
+    },
     card: {
       slots: {
         // Cartão com cantos de 12 px, borda fina e sem sombra (spec 08, seção 6)

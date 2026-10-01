@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   // SPA estática servida pelo NGINX (plano, seção 2.2)
   ssr: false,
 
-  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxt/test-utils/module'],
+  modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxt/eslint', '@nuxt/test-utils/module'],
 
   css: ['~/assets/css/main.css'],
 
@@ -31,7 +31,10 @@ export default defineNuxtConfig({
   icon: {
     provider: 'none',
     clientBundle: {
-      scan: true,
+      // Inclui `.ts`: a navegação e os níveis de e-mail definem ícones em `app/utils`
+      scan: {
+        globInclude: ['app/**/*.{vue,ts}'],
+      },
     },
   },
 
@@ -66,7 +69,7 @@ export default defineNuxtConfig({
     strict: true,
     // Testes de unidade (fora do app) também passam pelo `pnpm typecheck`
     nodeTsConfig: {
-      include: ['../tests/unit/**/*'],
+      include: ['../tests/unit/**/*', '../tests/e2e/**/*', '../playwright.config.ts'],
     },
   },
 
