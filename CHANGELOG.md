@@ -1,0 +1,13 @@
+# Changelog
+
+## 0.1.0 (2026-10-01)
+
+
+### Features
+
+* **auth:** adiciona acesso, sessão e estrutura do admin (fase 2) ([#11](https://github.com/mchlima/varal-admin-web/issues/11)) ([2a8ad89](https://github.com/mchlima/varal-admin-web/commit/2a8ad8938febed49f76f39c54e1d9a4818b02f77))
+
+
+### Bug Fixes
+
+* cria os worktrees fora do repositório ([#7](https://github.com/mchlima/varal-admin-web/issues/7)) ([69c95f8](https://github.com/mchlima/varal-admin-web/commit/69c95f800f350b92b12d2e483431fdd7a2498def))
