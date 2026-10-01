@@ -191,3 +191,29 @@ describe('createSharedRefresh', () => {
     expect(results).toEqual([false, false, false])
   })
 })
+
+describe('filtros das listagens', () => {
+  it('vão como parâmetros tipados da rota, sem os filtros vazios', async () => {
+    const urls: string[] = []
+    const api = createApiClient({
+      baseUrl: BASE_URL,
+      getDeviceId: () => DEVICE_ID,
+      fetch: vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        urls.push(new Request(input, init).url)
+        return json(200, { data: [], nextCursor: null })
+      }),
+    })
+
+    await api.GET('/api/v1/admin/organizations', {
+      params: { query: { search: undefined, status: 'active', cursor: 'abc', limit: 30 } },
+    })
+
+    const url = new URL(urls[0]!)
+    expect(url.pathname).toBe('/api/v1/admin/organizations')
+    expect(Object.fromEntries(url.searchParams)).toEqual({
+      status: 'active',
+      cursor: 'abc',
+      limit: '30',
+    })
+  })
+})

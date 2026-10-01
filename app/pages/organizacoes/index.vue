@@ -32,15 +32,16 @@ const statusSelect = computed({
 
 const list = useCursorList<OrganizationSummary>((cursor) =>
   apiCall(
-    $api.GET(
-      '/api/v1/admin/organizations',
-      listQuery<OrganizationListQuery>({
-        search: search.value.trim() || undefined,
-        status: status.value,
-        cursor,
-        limit: 30,
-      }),
-    ),
+    $api.GET('/api/v1/admin/organizations', {
+      params: {
+        query: {
+          search: search.value.trim() || undefined,
+          status: status.value,
+          cursor,
+          limit: 30,
+        },
+      },
+    }),
   ),
 )
 

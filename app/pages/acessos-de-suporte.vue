@@ -22,15 +22,11 @@ const tabs = [
 
 const list = useCursorList<Impersonation>((cursor) =>
   apiCall(
-    $api.GET(
-      '/api/v1/admin/impersonations',
-      listQuery<ImpersonationListQuery>({
-        active: active.value,
-        mine: mine.value ? 'true' : undefined,
-        cursor,
-        limit: 30,
-      }),
-    ),
+    $api.GET('/api/v1/admin/impersonations', {
+      params: {
+        query: { active: active.value, mine: mine.value ? 'true' : undefined, cursor, limit: 30 },
+      },
+    }),
   ),
 )
 

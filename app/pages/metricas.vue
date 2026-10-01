@@ -37,12 +37,11 @@ async function load() {
   error.value = null
   const period = { from: from.value, to: to.value }
   const [overviewResult, usageResult] = await Promise.all([
-    apiCall($api.GET('/api/v1/admin/metrics/overview', listQuery(period))),
+    apiCall($api.GET('/api/v1/admin/metrics/overview', { params: { query: period } })),
     apiCall(
-      $api.GET(
-        '/api/v1/admin/metrics/organizations',
-        listQuery<OrganizationUsageQuery>({ ...period, sort: sort.value, order: order.value }),
-      ),
+      $api.GET('/api/v1/admin/metrics/organizations', {
+        params: { query: { ...period, sort: sort.value, order: order.value } },
+      }),
     ),
   ])
   loading.value = false

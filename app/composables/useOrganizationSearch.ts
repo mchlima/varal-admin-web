@@ -28,7 +28,9 @@ export function useOrganizationSearch() {
     const current = ++generation
     loading.value = true
     const result = await apiCall(
-      $api.GET('/api/v1/admin/organizations', listQuery({ search: term.trim(), limit: 20 })),
+      $api.GET('/api/v1/admin/organizations', {
+        params: { query: { search: term.trim() || undefined, limit: 20 } },
+      }),
     )
     if (current !== generation) return
     loading.value = false
