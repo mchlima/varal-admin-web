@@ -105,6 +105,3 @@ export function validateInviteAdmin(state: InviteAdminForm): FormError[] {
   requireEmail(errors, 'email', state.email)
   return errors
 }
-
-/** RN-02.17: motivo do "entrar como" com pelo menos 10 caracteres. */
-export const IMPERSONATION_REASON_MIN = 10

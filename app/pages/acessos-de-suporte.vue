@@ -58,19 +58,13 @@ async function end() {
   }
   return result
 }
-
-function endedLabel(item: Impersonation): string {
-  if (item.active) return `Termina às ${formatDateTime(item.expiresAt)}`
-  if (item.endedBy === 'admin') return `Encerrado ${formatDateTime(item.endedAt)}`
-  return `Expirou ${formatDateTime(item.endedAt ?? item.expiresAt)}`
-}
 </script>
 
 <template>
   <div class="flex flex-col gap-6">
     <PageHeader
       title="Acessos de suporte"
-      description='Sessões de "entrar como" no painel dos donos. Cada acesso dura até 60 minutos e o dono vê a lista na conta dele.'
+      description='Sessões de "entrar como" no painel dos donos. Cada acesso dura até ser encerrado e o dono vê a lista na conta dele.'
     />
 
     <div class="flex flex-wrap items-center justify-between gap-3">
@@ -104,6 +98,7 @@ function endedLabel(item: Impersonation): string {
         :key="item.id"
         class="flex flex-col gap-3 rounded-(--radius-card) border border-(--color-border) bg-(--color-surface) p-4 sm:flex-row sm:items-center sm:justify-between"
         data-testid="impersonation-row"
+        :data-impersonation-id="item.id"
       >
         <div class="flex min-w-0 flex-col gap-1">
           <p class="font-bold">
@@ -118,9 +113,9 @@ function endedLabel(item: Impersonation): string {
           </p>
           <p class="text-sm">
             {{ item.platformAdminId === session.admin?.id ? 'Você' : item.adminName }} · início
-            {{ formatDateTime(item.startedAt) }} · {{ endedLabel(item) }}
+            {{ formatDateTime(item.startedAt) }} · {{ impersonationStatusLabel(item) }}
           </p>
-          <p class="text-sm text-(--color-text-muted)">
+          <p v-if="item.reason" class="text-sm text-(--color-text-muted)">
             <strong>Motivo:</strong> {{ item.reason }}
           </p>
         </div>
