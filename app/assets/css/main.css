@@ -96,7 +96,7 @@
   --ui-border: var(--color-border);
   --ui-border-muted: var(--color-border);
   /* Borda de campos e botões de contorno: 3:1 sobre branco (spec 08, seção 8) */
-  --ui-border-accented: var(--ui-color-neutral-500);
+  --ui-border-accented: var(--color-border-strong);
   --ui-border-inverted: var(--color-text);
 
   /* rounded-md = 6 px (chip); controles e cartões usam os tokens de raio */
