@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/mchlima/varal-admin-web/compare/v0.2.1...v0.3.0) (2026-10-01)
+
+
+### Features
+
+* **impersonation:** tira o motivo e o prazo do entrar como ([#17](https://github.com/mchlima/varal-admin-web/issues/17)) ([a2c4278](https://github.com/mchlima/varal-admin-web/commit/a2c4278039fc0b2c84162b0ff6e33f9c59b3c9a0))
+
 ## [0.2.1](https://github.com/mchlima/varal-admin-web/compare/v0.2.0...v0.2.1) (2026-10-01)
 
 
