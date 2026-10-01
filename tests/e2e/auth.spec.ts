@@ -56,13 +56,14 @@ test('logado, /entrar vai para o início; navegação lateral com as rotas do ad
     'Auditoria',
     'Usuários',
     'Papéis',
+    'Acessos de suporte',
   ]) {
     await expect(nav.getByRole('link', { name: label })).toBeVisible()
   }
 
   await nav.getByRole('link', { name: 'Auditoria' }).click()
   await expect(page).toHaveURL(/\/auditoria$/)
-  await expect(page.getByRole('heading', { name: 'Em construção' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Auditoria', level: 1 })).toBeVisible()
   await expect(nav.getByRole('link', { name: 'Auditoria' })).toHaveAttribute('aria-current', 'page')
 })
 

@@ -28,6 +28,17 @@ export default defineNuxtPlugin({
       },
     })
 
+    // RN-02.08: um 403 pode significar que as permissões mudaram desde que a
+    // tela abriu; relê o perfil para a interface esconder o que não pode mais.
+    api.use({
+      onResponse({ response }) {
+        if (response.status === 403) {
+          void nuxtApp.runWithContext(() => useSessionStore().refreshProfile())
+        }
+        return response
+      },
+    })
+
     return {
       provide: { api, deviceId: getDeviceId },
     }
