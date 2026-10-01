@@ -13,3 +13,6 @@ AGENTS.md
 CLAUDE.md
 .claude/
 .githooks/
+test-results/
+playwright-report/
+blob-report/

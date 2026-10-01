@@ -19,14 +19,17 @@
     "format": "prettier --write . && eslint . --fix",
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "@fontsource/bricolage-grotesque": "^5.3.0",
     "@nuxt/ui": "^4.11.2",
+    "@pinia/nuxt": "^1.0.2",
     "nuxt": "^4.5.2",
     "openapi-fetch": "^0.17.0",
+    "pinia": "^4.0.3",
     "tailwindcss": "^4.3.3",
     "vue": "^3.5.43",
     "vue-router": "^5.3.1"
@@ -35,6 +38,7 @@
     "@iconify-json/lucide": "^1.2.138",
     "@nuxt/eslint": "^1.17.0",
     "@nuxt/test-utils": "^4.3.2",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.3",
     "@vue/test-utils": "^2.5.1",
     "eslint": "^10.11.0",
