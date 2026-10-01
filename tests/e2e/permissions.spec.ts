@@ -91,7 +91,7 @@ test('CA-02.01/02: Leitura não vê as ações; a avulsa organizations:create li
     }),
     reader.request.post(`${apiBase}/api/v1/admin/impersonations`, {
       headers,
-      data: { organizationId, reason: 'Não pode entrar como' },
+      data: { organizationId },
     }),
   ]
   for (const response of await Promise.all(attempts)) {

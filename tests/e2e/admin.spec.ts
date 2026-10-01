@@ -109,7 +109,7 @@ test('publica um comunicado para todas as organizações (RN-02.15)', async ({ p
   await expect(page.getByTestId('announcement-row').filter({ hasText: title })).toBeVisible()
 })
 
-test('"entrar como" gera o link do painel e o acesso pode ser encerrado (RN-02.17, RN-02.21)', async ({
+test('"entrar como" gera o link do painel, sem motivo nem prazo, e o acesso pode ser encerrado (RN-02.17, RN-02.21)', async ({
   page,
   context,
 }) => {
@@ -117,20 +117,28 @@ test('"entrar como" gera o link do painel e o acesso pode ser encerrado (RN-02.1
   await context.route('**/entrar-como*', (route) =>
     route.fulfill({ contentType: 'text/html', body: '<title>painel</title>' }),
   )
-  const reason = `Ajudar a cadastrar o cardápio ${unique()}`
   await login(page)
   await page.goto('/organizacoes?busca=ESPT26')
   await page.getByTestId('organization-row').first().click()
   await page.getByRole('button', { name: 'Entrar como' }).click()
 
+  // RN-02.17: só a confirmação; nada de motivo nem de limite de tempo
   const dialog = page.getByRole('dialog')
-  await dialog.getByLabel('Motivo do acesso').fill('curto')
-  await dialog.getByRole('button', { name: 'Entrar como o dono' }).click()
-  await expect(dialog.getByText('pelo menos 10 caracteres', { exact: false }).first()).toBeVisible()
+  await expect(dialog.getByLabel('Motivo do acesso')).toHaveCount(0)
+  await expect(dialog).not.toContainText('60 minutos')
+  await expect(dialog).toContainText('até você encerrar')
 
-  await dialog.getByLabel('Motivo do acesso').fill(reason)
+  const started = page.waitForResponse(
+    (response) =>
+      response.request().method() === 'POST' &&
+      response.url().endsWith('/api/v1/admin/impersonations'),
+  )
   const popupPromise = page.waitForEvent('popup')
   await dialog.getByRole('button', { name: 'Entrar como o dono' }).click()
+  const body = (await (await started).json()) as {
+    impersonation: { id: string; reason: string | null; expiresAt: string | null }
+  }
+  expect(body.impersonation).toMatchObject({ reason: null, expiresAt: null })
   const popup = await popupPromise
   await expect.poll(() => popup.url()).toMatch(/\/entrar-como#token=.+/)
   await expect(dialog.getByTestId('impersonation-started')).toBeVisible()
@@ -142,8 +150,9 @@ test('"entrar como" gera o link do painel e o acesso pode ser encerrado (RN-02.1
   await dialog.getByRole('button', { name: 'Fechar', exact: true }).last().click()
 
   await page.goto('/acessos-de-suporte')
-  const row = page.getByTestId('impersonation-row').filter({ hasText: reason })
-  await expect(row).toBeVisible()
+  const row = page.locator(`[data-impersonation-id="${body.impersonation.id}"]`)
+  await expect(row).toContainText('em andamento')
+  await expect(row).not.toContainText('Motivo')
   await row.getByRole('button', { name: 'Encerrar acesso' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Encerrar acesso' }).click()
   await expect(row).toHaveCount(0)

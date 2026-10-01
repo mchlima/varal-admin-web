@@ -1,3 +1,6 @@
+import type { Impersonation } from './api-types'
+import { formatDateTime } from './format'
+
 /**
  * Abre o link do "entrar como" (RN-02.21) numa nova aba.
  *
@@ -30,4 +33,17 @@ export function prepareTab(open: typeof window.open = window.open.bind(window)):
       if (tab && !tab.closed) tab.close()
     },
   }
+}
+
+/**
+ * Situação de um acesso na lista (RN-02.17): sem prazo, fica "em andamento"
+ * até o admin encerrar. `expired` só aparece nos acessos antigos, do tempo em
+ * que havia o limite de 60 minutos.
+ */
+export function impersonationStatusLabel(
+  item: Pick<Impersonation, 'active' | 'endedAt' | 'endedBy'>,
+): string {
+  if (item.active) return 'em andamento'
+  if (item.endedBy === 'expired') return `expirou ${formatDateTime(item.endedAt)}`
+  return `encerrado ${formatDateTime(item.endedAt)}`
 }

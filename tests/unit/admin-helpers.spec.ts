@@ -8,7 +8,7 @@ import {
   saoPauloLocalToIso,
   todayInSaoPaulo,
 } from '../../app/utils/format'
-import { prepareTab } from '../../app/utils/impersonation'
+import { impersonationStatusLabel, prepareTab } from '../../app/utils/impersonation'
 import { canReactivate, canSuspend, readSummary } from '../../app/utils/statuses'
 import {
   validateAnnouncement,
@@ -170,5 +170,30 @@ describe('"entrar como" numa nova aba (RN-02.21)', () => {
 
   it('aba bloqueada: avisa para a tela mostrar o link', () => {
     expect(prepareTab(() => null).navigate('http://painel/entrar-como#token=abc')).toBe(false)
+  })
+})
+
+describe('lista de acessos de suporte (RN-02.17, RN-02.22)', () => {
+  it('sem prazo: em andamento até o admin encerrar', () => {
+    expect(impersonationStatusLabel({ active: true, endedAt: null, endedBy: null })).toBe(
+      'em andamento',
+    )
+    expect(
+      impersonationStatusLabel({
+        active: false,
+        endedAt: '2026-10-01T15:30:00Z',
+        endedBy: 'admin',
+      }),
+    ).toMatch(/^encerrado 01\/10\/2026/)
+  })
+
+  it('acessos antigos que venceram no limite de 60 minutos aparecem como expirados', () => {
+    expect(
+      impersonationStatusLabel({
+        active: false,
+        endedAt: '2026-10-01T15:30:00Z',
+        endedBy: 'expired',
+      }),
+    ).toMatch(/^expirou /)
   })
 })
