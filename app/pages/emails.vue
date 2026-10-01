@@ -29,17 +29,18 @@ const statusOptions = [
 
 const list = useCursorList<EmailLog>((cursor) =>
   apiCall(
-    $api.GET(
-      '/api/v1/admin/emails',
-      listQuery<EmailLogListQuery>({
-        type: filters.type === 'all' ? undefined : filters.type,
-        status: filters.status === 'all' ? undefined : filters.status,
-        organizationId: filters.organizationId,
-        ...dayRangeToInstants(filters.from, filters.to),
-        cursor,
-        limit: 50,
-      }),
-    ),
+    $api.GET('/api/v1/admin/emails', {
+      params: {
+        query: {
+          type: filters.type === 'all' ? undefined : filters.type,
+          status: filters.status === 'all' ? undefined : filters.status,
+          organizationId: filters.organizationId || undefined,
+          ...dayRangeToInstants(filters.from, filters.to),
+          cursor,
+          limit: 50,
+        },
+      },
+    }),
   ),
 )
 

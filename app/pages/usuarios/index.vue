@@ -19,15 +19,16 @@ const activeOptions = [
 
 const list = useCursorList<AdminUser>((cursor) =>
   apiCall(
-    $api.GET(
-      '/api/v1/admin/users',
-      listQuery<AdminUserListQuery>({
-        search: search.value.trim() || undefined,
-        active: active.value === 'all' ? undefined : active.value,
-        cursor,
-        limit: 50,
-      }),
-    ),
+    $api.GET('/api/v1/admin/users', {
+      params: {
+        query: {
+          search: search.value.trim() || undefined,
+          active: active.value === 'all' ? undefined : active.value,
+          cursor,
+          limit: 50,
+        },
+      },
+    }),
   ),
 )
 

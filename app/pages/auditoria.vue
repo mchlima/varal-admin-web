@@ -43,20 +43,21 @@ const actorOptions = [
 const list = useCursorList<AuditLogEntry>((cursor) => {
   const current = applied.value
   return apiCall(
-    $api.GET(
-      '/api/v1/admin/audit-logs',
-      listQuery<AuditLogListQuery>({
-        organizationId: current.organizationId,
-        actorType: current.actorType === 'all' ? undefined : current.actorType,
-        actorId: current.actorId.trim() || undefined,
-        impersonatorId: current.impersonatorId.trim() || undefined,
-        action: current.action.trim() || undefined,
-        entityType: current.entityType.trim() || undefined,
-        ...dayRangeToInstants(current.from, current.to),
-        cursor,
-        limit: 50,
-      }),
-    ),
+    $api.GET('/api/v1/admin/audit-logs', {
+      params: {
+        query: {
+          organizationId: current.organizationId || undefined,
+          actorType: current.actorType === 'all' ? undefined : current.actorType,
+          actorId: current.actorId.trim() || undefined,
+          impersonatorId: current.impersonatorId.trim() || undefined,
+          action: current.action.trim() || undefined,
+          entityType: current.entityType.trim() || undefined,
+          ...dayRangeToInstants(current.from, current.to),
+          cursor,
+          limit: 50,
+        },
+      },
+    }),
   )
 })
 
@@ -81,7 +82,7 @@ const adminNames = ref(new Map<string, string>())
 onMounted(async () => {
   if (!can('admin.users:manage')) return
   const result = await apiCall(
-    $api.GET('/api/v1/admin/users', listQuery<AdminUserListQuery>({ limit: 100 })),
+    $api.GET('/api/v1/admin/users', { params: { query: { limit: 100 } } }),
   )
   if (result.ok) adminNames.value = new Map(result.data.data.map((user) => [user.id, user.name]))
 })

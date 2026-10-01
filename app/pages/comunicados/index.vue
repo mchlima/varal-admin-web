@@ -33,10 +33,9 @@ const tab = computed({
 
 const list = useCursorList<Announcement>((cursor) =>
   apiCall(
-    $api.GET(
-      '/api/v1/admin/announcements',
-      listQuery<AnnouncementListQuery>({ status: status.value, cursor, limit: 30 }),
-    ),
+    $api.GET('/api/v1/admin/announcements', {
+      params: { query: { status: status.value, cursor, limit: 30 } },
+    }),
   ),
 )
 

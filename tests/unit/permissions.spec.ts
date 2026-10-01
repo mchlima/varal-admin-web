@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { describeApiError, listQuery } from '../../app/utils/api-call'
+import { describeApiError } from '../../app/utils/api-call'
 import { NAVIGATION, visibleNavigation } from '../../app/utils/navigation'
 import {
   FORBIDDEN_MESSAGE,
@@ -94,11 +94,5 @@ describe('erros da API', () => {
   it('outros erros mantêm a mensagem da API (RN-02.05)', () => {
     const message = 'É preciso manter pelo menos um usuário ativo com o papel Super admin.'
     expect(describeApiError({ error: { code: 'LAST_SUPER_ADMIN', message } }).message).toBe(message)
-  })
-
-  it('listQuery tira filtros vazios', () => {
-    expect(listQuery({ search: '', status: undefined, limit: 30, cursor: 'abc' })).toEqual({
-      params: { query: { limit: 30, cursor: 'abc' } },
-    })
   })
 })

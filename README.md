@@ -99,7 +99,7 @@ if (error) mensagem.value = toApiError(error).message
 
 - **Entrar como (RN-02.17 a RN-02.21):** motivo com pelo menos 10 caracteres; a aba nova é aberta no clique (o navegador bloqueia abas abertas depois de uma resposta assíncrona) e recebe o `handoffUrl` da API (`{PANEL_URL}/entrar-como#token=...`). Se o navegador bloquear, o modal mostra o botão "Abrir o painel" (link de uso único, 2 minutos).
 - **Ações destrutivas** (suspender, arquivar, desativar, excluir, encerrar acesso) pedem confirmação na própria tela, num modal (spec 08, seção 6).
-- **Listas por cursor:** `useCursorList()` (`{ data, nextCursor }`, botão "Carregar mais"). Os filtros das rotas do admin estão no OpenAPI como schemas `*QueryInput`, mas não ligados às operações; `listQuery()` (`app/utils/api-call.ts`) passa os filtros tipados pelo schema.
+- **Listas por cursor:** `useCursorList()` (`{ data, nextCursor }`, botão "Carregar mais"). Filtros, `limit` e `cursor` vão em `params.query`, tipados pela própria rota no OpenAPI; valores vazios viram `undefined` (o cliente não manda `undefined` nem `null`).
 
 ## Testes de ponta a ponta
 

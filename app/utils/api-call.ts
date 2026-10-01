@@ -26,17 +26,3 @@ export function describeApiError(value: unknown): ApiErrorInfo {
   if (info.code === 'FORBIDDEN') return { ...info, message: FORBIDDEN_MESSAGE }
   return info
 }
-
-/**
- * Parâmetros de busca de uma listagem. As rotas do admin declaram os filtros
- * como schemas `*QueryInput` no OpenAPI, mas não os ligam à operação: o tipo
- * gerado da rota não aceita `query`. Os filtros continuam tipados pelo schema
- * do componente e passam por aqui, sem chaves vazias.
- */
-export function listQuery<Q extends object>(query: Q): { params: { query: never } } {
-  const clean: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(query)) {
-    if (value !== undefined && value !== null && value !== '') clean[key] = value
-  }
-  return { params: { query: clean as never } }
-}
