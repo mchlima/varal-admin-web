@@ -35,10 +35,10 @@ Variáveis em [`.env.example`](.env.example). Em desenvolvimento, o `nuxt.config
 
 ## Worktrees
 
-Cada tarefa roda num worktree próprio em `.worktrees/` (spec 01, seção 4.1):
+Cada tarefa roda num worktree próprio fora do repositório, em `../.worktrees/varal-admin-web/<nome>` (spec 01, seção 4.1):
 
 ```sh
-scripts/worktree.sh new feat/lista-de-organizacoes   # cria .worktrees/feat-lista-de-organizacoes
+scripts/worktree.sh new feat/lista-de-organizacoes   # cria ../.worktrees/varal-admin-web/feat-lista-de-organizacoes
 scripts/worktree.sh list                             # worktrees, branches e portas
 scripts/worktree.sh remove feat-lista-de-organizacoes
 ```
