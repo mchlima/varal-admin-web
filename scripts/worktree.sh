@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Worktrees de desenvolvimento do varal-admin-web (spec 01, seção 4.1).
 #
-#   scripts/worktree.sh new <tipo>/<descricao>   cria .worktrees/<tipo>-<descricao>
+#   scripts/worktree.sh new <tipo>/<descricao>   cria ../.worktrees/<repositório>/<tipo>-<descricao>
 #   scripts/worktree.sh list                     lista worktrees, branches e portas
-#   scripts/worktree.sh remove <nome>            remove .worktrees/<nome>
+#   scripts/worktree.sh remove <nome>            remove ../.worktrees/<repositório>/<nome>
 #
 # RN-01.07: cada worktree tem um .env.local com WORKTREE_SLUG e PORT_OFFSET.
 # RN-01.08: porta do admin = 3200 + PORT_OFFSET; offset livre entre 1 e 99.
@@ -39,6 +39,14 @@ main_root() {
   dirname "$common_dir"
 }
 
+# Os worktrees ficam fora do repositório, em <pasta comum>/.worktrees/<repositório>/<nome>
+# (ex.: varal/.worktrees/varal-panel-web/feat-x). Dentro do repositório, ferramentas que
+# sobem pelas pastas (Nuxt, Vite, TypeScript) encontrariam a configuração do checkout principal.
+worktrees_dir() {
+  local root="$1"
+  printf '%s/.worktrees/%s' "$(dirname "$root")" "$(basename "$root")"
+}
+
 # Lê uma variável de um .env.local (formato CHAVE=valor, sem aspas).
 env_value() {
   local file="$1" key="$2"
@@ -48,7 +56,7 @@ env_value() {
 
 next_free_offset() {
   local root="$1" offset file used=' '
-  for file in "$root"/.worktrees/*/.env.local; do
+  for file in "$(worktrees_dir "$root")"/*/.env.local; do
     [[ -f "$file" ]] || continue
     used+="$(env_value "$file" PORT_OFFSET) "
   done
@@ -83,7 +91,7 @@ Ative uma vez com:
   fi
 
   local slug="${branch/\//-}"
-  local path="$root/.worktrees/$slug"
+  local path="$(worktrees_dir "$root")/$slug"
   [[ ! -e "$path" ]] || die "o worktree $path já existe"
   if git -C "$root" show-ref --verify --quiet "refs/heads/$branch"; then
     die "a branch $branch já existe; escolha outro nome ou use o worktree dela"
@@ -140,7 +148,7 @@ cmd_list() {
           port="$(env_value "$env_file" PORT)"
           [[ -n "$port" ]] || port=$((BASE_PORT + ${offset:-0}))
           api="$(env_value "$env_file" NUXT_PUBLIC_API_BASE_URL)"
-          if [[ "$path" == "$root" ]]; then name='(principal)'; else name="${path#"$root"/.worktrees/}"; fi
+          if [[ "$path" == "$root" ]]; then name='(principal)'; else name="${path#"$(worktrees_dir "$root")"/}"; fi
           printf '%-40s %-40s %-6s %s\n' "$name" "${branch:-?}" "$port" "${api:-$DEFAULT_API_BASE_URL}"
         fi
         path=''
@@ -160,7 +168,7 @@ cmd_remove() {
 
   local root path
   root="$(main_root)"
-  path="$root/.worktrees/$name"
+  path="$(worktrees_dir "$root")/$name"
   [[ -d "$path" ]] || die "não existe worktree em $path"
 
   if [[ -n "$(git -C "$path" status --porcelain)" ]]; then
