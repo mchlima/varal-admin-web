@@ -239,9 +239,9 @@ async function sendPasswordLink() {
             @submit="saveName"
           >
             <FormErrorAlert v-if="nameError" :message="nameError" />
-            <UFormField label="Nome" name="name">
+            <ValidatedField label="Nome" name="name">
               <UInput v-model="name" maxlength="120" class="w-full" />
-            </UFormField>
+            </ValidatedField>
             <div class="flex flex-wrap gap-2">
               <UButton
                 type="submit"

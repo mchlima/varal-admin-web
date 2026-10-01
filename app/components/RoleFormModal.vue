@@ -62,10 +62,10 @@ async function submit() {
         @submit="submit"
       >
         <FormErrorAlert v-if="formError" :message="formError" />
-        <UFormField label="Nome" name="name">
+        <ValidatedField label="Nome" name="name">
           <UInput v-model="state.name" maxlength="60" class="w-full" />
-        </UFormField>
-        <UFormField label="Descrição" name="description" hint="Opcional">
+        </ValidatedField>
+        <ValidatedField label="Descrição" name="description" hint="Opcional">
           <UTextarea
             v-model="state.description"
             maxlength="300"
@@ -73,7 +73,7 @@ async function submit() {
             autoresize
             class="w-full"
           />
-        </UFormField>
+        </ValidatedField>
         <PermissionChecklist v-model="permissions" :groups="groups" />
       </UForm>
     </template>

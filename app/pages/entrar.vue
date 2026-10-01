@@ -57,7 +57,7 @@ async function submit() {
     >
       <FormErrorAlert v-if="formError" :message="formError" />
 
-      <UFormField label="E-mail" name="email">
+      <ValidatedField label="E-mail" name="email">
         <UInput
           v-model="state.email"
           type="email"
@@ -66,11 +66,11 @@ async function submit() {
           autofocus
           class="w-full"
         />
-      </UFormField>
+      </ValidatedField>
 
-      <UFormField label="Senha" name="password">
+      <ValidatedField label="Senha" name="password">
         <PasswordInput v-model="state.password" autocomplete="current-password" />
-      </UFormField>
+      </ValidatedField>
 
       <UButton type="submit" label="Entrar" block :loading="submitting" />
     </UForm>

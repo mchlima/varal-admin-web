@@ -135,13 +135,13 @@ async function run(kind: 'draft' | 'publish') {
 
     <UCard>
       <div class="flex flex-col gap-4">
-        <UFormField
+        <ValidatedField
           label="Título"
           name="title"
           :hint="`${state.title.length}/${ANNOUNCEMENT_TITLE_MAX}`"
         >
           <UInput v-model="state.title" :maxlength="ANNOUNCEMENT_TITLE_MAX" class="w-full" />
-        </UFormField>
+        </ValidatedField>
 
         <div class="flex flex-col gap-2">
           <div class="flex flex-wrap items-center justify-between gap-2">
@@ -156,11 +156,11 @@ async function run(kind: 'draft' | 'publish') {
               size="sm"
             />
           </div>
-          <UFormField
+          <ValidatedField
             v-show="mode === 'write'"
             name="body"
             :hint="`${state.body.length}/${ANNOUNCEMENT_BODY_MAX}`"
-            help="Markdown simples: **negrito**, *itálico*, listas com - ou 1. e links [texto](https://...). Deixe uma linha em branco entre os parágrafos."
+            description="Markdown simples: **negrito**, *itálico*, listas com - ou 1. e links [texto](https://...). Deixe uma linha em branco entre os parágrafos."
           >
             <UTextarea
               v-model="state.body"
@@ -170,7 +170,7 @@ async function run(kind: 'draft' | 'publish') {
               autoresize
               class="w-full"
             />
-          </UFormField>
+          </ValidatedField>
           <div
             v-if="mode === 'preview'"
             class="min-h-40 rounded-(--radius-control) border border-(--color-border) bg-(--color-surface-muted) p-4"
@@ -195,10 +195,10 @@ async function run(kind: 'draft' | 'publish') {
         </p>
       </template>
       <div class="flex flex-col gap-4">
-        <UFormField name="audienceType" label="Enviar para">
+        <ValidatedField name="audienceType" label="Enviar para">
           <URadioGroup v-model="state.audienceType" :items="audienceOptions" />
-        </UFormField>
-        <UFormField
+        </ValidatedField>
+        <ValidatedField
           v-if="state.audienceType === 'by_status'"
           label="Situações"
           name="audienceStatuses"
@@ -208,8 +208,8 @@ async function run(kind: 'draft' | 'publish') {
             :items="statusItems"
             orientation="horizontal"
           />
-        </UFormField>
-        <UFormField
+        </ValidatedField>
+        <ValidatedField
           v-if="state.audienceType === 'selected'"
           label="Organizações"
           name="organizationIds"
@@ -218,7 +218,7 @@ async function run(kind: 'draft' | 'publish') {
             v-model="state.organizationIds"
             :initial="initialOrganizations"
           />
-        </UFormField>
+        </ValidatedField>
       </div>
     </UCard>
 
@@ -231,13 +231,13 @@ async function run(kind: 'draft' | 'publish') {
       </template>
       <div class="flex flex-col gap-4">
         <URadioGroup v-model="publishMode" :items="publishOptions" orientation="horizontal" />
-        <UFormField
+        <ValidatedField
           v-if="publishMode === 'schedule'"
           label="Data e hora (horário de Brasília)"
           name="publishAt"
         >
           <UInput v-model="publishAt" type="datetime-local" class="w-full sm:w-72" />
-        </UFormField>
+        </ValidatedField>
       </div>
     </UCard>
 

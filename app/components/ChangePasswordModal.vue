@@ -84,15 +84,15 @@ async function submit() {
         @submit="submit"
       >
         <FormErrorAlert v-if="formError" :message="formError" />
-        <UFormField label="Senha atual" name="currentPassword">
+        <ValidatedField label="Senha atual" name="currentPassword">
           <PasswordInput v-model="state.currentPassword" autocomplete="current-password" />
-        </UFormField>
-        <UFormField label="Nova senha" name="newPassword" :help="PASSWORD_HELP">
+        </ValidatedField>
+        <ValidatedField label="Nova senha" name="newPassword" :description="PASSWORD_HELP">
           <PasswordInput v-model="state.newPassword" autocomplete="new-password" />
-        </UFormField>
-        <UFormField label="Confirme a nova senha" name="confirmPassword">
+        </ValidatedField>
+        <ValidatedField label="Confirme a nova senha" name="confirmPassword">
           <PasswordInput v-model="state.confirmPassword" autocomplete="new-password" />
-        </UFormField>
+        </ValidatedField>
       </UForm>
     </template>
     <template #footer>

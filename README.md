@@ -70,6 +70,7 @@ if (error) mensagem.value = toApiError(error).message
 - Rotas da spec 01, seção 14.1: `/entrar`, `/esqueci-a-senha` (mensagem sempre igual, RN-01.03), `/definir-senha` (lê `#token=...&tipo=convite|redefinicao`, guarda o token só em memória e apaga o fragmento da URL) e as telas do admin (abaixo).
 - Início e E-mails mostram o consumo de e-mail do mês (`GET /admin/emails/usage`, RN-01.04): normal, alerta a partir de 8.000 e crítico em 10.000, sempre com texto e ícone.
 - Troca de senha no menu do usuário (nome no rodapé da navegação lateral ou no cabeçalho do celular).
+- Formulários validam cada campo ao sair dele (`validate-on="['blur']"`). Os campos validados usam `ValidatedField` (`UFormField` com a linha da mensagem de erro sempre reservada, e a ajuda em `description`, acima do controle): o erro aparecer ou sumir não muda a altura do formulário, e o clique no botão de enviar logo depois de corrigir um campo não se perde.
 - Layout (`app/layouts/default.vue`): navegação lateral a partir de 1024 px; abaixo, cabeçalho e menu inferior com Início, Organizações, Comunicados e "Mais" (spec 08, seção 7).
 
 ## Admin da plataforma (spec 02)

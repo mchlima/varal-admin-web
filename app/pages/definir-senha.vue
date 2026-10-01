@@ -140,12 +140,12 @@ async function submit() {
       @submit="submit"
     >
       <FormErrorAlert v-if="formError" :message="formError" />
-      <UFormField label="Nova senha" name="password" :help="PASSWORD_HELP">
+      <ValidatedField label="Nova senha" name="password" :description="PASSWORD_HELP">
         <PasswordInput v-model="state.password" autocomplete="new-password" />
-      </UFormField>
-      <UFormField label="Confirme a nova senha" name="confirmPassword">
+      </ValidatedField>
+      <ValidatedField label="Confirme a nova senha" name="confirmPassword">
         <PasswordInput v-model="state.confirmPassword" autocomplete="new-password" />
-      </UFormField>
+      </ValidatedField>
       <UButton
         type="submit"
         :label="kind === 'convite' ? 'Criar senha' : 'Definir senha'"

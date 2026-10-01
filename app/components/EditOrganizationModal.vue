@@ -84,24 +84,24 @@ async function submit() {
         @submit="submit"
       >
         <FormErrorAlert v-if="formError" :message="formError" />
-        <UFormField label="Nome da organização" name="name">
+        <ValidatedField label="Nome da organização" name="name">
           <UInput v-model="state.name" maxlength="120" class="w-full" />
-        </UFormField>
+        </ValidatedField>
         <template v-if="hasOwner">
-          <UFormField label="Nome do dono" name="owner.name">
+          <ValidatedField label="Nome do dono" name="owner.name">
             <UInput v-model="state.ownerName" maxlength="120" class="w-full" />
-          </UFormField>
-          <UFormField
+          </ValidatedField>
+          <ValidatedField
             label="E-mail do dono"
             name="owner.email"
-            :help="
+            :description="
               emailChanged && organization.owner?.inviteStatus !== 'accepted'
                 ? 'Um convite novo vai para o e-mail novo.'
                 : undefined
             "
           >
             <UInput v-model="state.ownerEmail" type="email" inputmode="email" class="w-full" />
-          </UFormField>
+          </ValidatedField>
         </template>
       </UForm>
     </template>

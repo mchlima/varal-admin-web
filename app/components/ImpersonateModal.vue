@@ -107,13 +107,13 @@ async function submit() {
           Você vai agir no painel com as mesmas permissões do dono. Tudo o que fizer fica na
           auditoria com o seu nome, e o dono vê este acesso com o motivo.
         </p>
-        <UFormField
+        <ValidatedField
           label="Motivo do acesso"
           name="reason"
-          :help="`Pelo menos ${IMPERSONATION_REASON_MIN} caracteres. Ex.: ajudar a cadastrar o cardápio.`"
+          :description="`Pelo menos ${IMPERSONATION_REASON_MIN} caracteres. Ex.: ajudar a cadastrar o cardápio.`"
         >
           <UTextarea v-model="reason" :rows="3" maxlength="500" autoresize class="w-full" />
-        </UFormField>
+        </ValidatedField>
       </UForm>
     </template>
     <template #footer>
