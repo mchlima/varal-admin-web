@@ -1,6 +1,6 @@
 {
   "name": "varal-admin-web",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Admin da plataforma Varal (Nuxt SPA)",
