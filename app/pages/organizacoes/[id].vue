@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * Organização (spec 02, seção 4 e 11): situação, dono e convite, unidades,
- * colaboradores ativos, últimos turnos, último acesso e comunicados não
+ * colaboradores ativos, últimos 10 dias de operação, último acesso e comunicados não
  * lidos. Ações conforme a permissão (RN-02.01) e a situação (RN-02.11):
  * Suspender/Reativar, Mudar situação, Editar, Reenviar convite e Entrar como.
  */
@@ -306,24 +306,28 @@ const canResendInvite = computed(
         </UCard>
 
         <UCard>
-          <template #header><h2 class="text-lg font-semibold">Últimos turnos</h2></template>
+          <template #header>
+            <h2 class="text-lg font-semibold">Últimos dias de operação</h2>
+          </template>
           <ul
-            v-if="organization.recentShifts.length > 0"
+            v-if="organization.recentOperationDays.length > 0"
             class="flex flex-col divide-y divide-(--color-border)"
+            data-testid="recent-operation-days"
           >
             <li
-              v-for="shift in organization.recentShifts"
-              :key="shift.id"
-              class="flex justify-between gap-2 py-2 tabular-nums"
+              v-for="day in organization.recentOperationDays"
+              :key="`${day.unitId}-${day.businessDate}`"
+              class="flex items-center justify-between gap-2 py-2 tabular-nums"
             >
-              <span>{{ formatDateTime(shift.openedAt) }}</span>
-              <span class="text-(--color-text-muted)">{{
-                shift.closedAt ? `fechado ${formatDateTime(shift.closedAt)}` : 'em andamento'
-              }}</span>
+              <div class="flex flex-col">
+                <span class="font-bold">{{ formatDay(day.businessDate) }}</span>
+                <span class="text-sm text-(--color-text-muted)">{{ day.unitName }}</span>
+              </div>
+              <span>{{ formatCents(day.salesCents) }}</span>
             </li>
           </ul>
           <p v-else class="text-(--color-text-muted)">
-            Nenhum turno ainda. Os turnos aparecem aqui quando o balcão e a cozinha entrarem em uso.
+            Nenhum dia de operação ainda. Eles aparecem aqui quando a organização abrir caixa.
           </p>
         </UCard>
       </div>
@@ -331,7 +335,7 @@ const canResendInvite = computed(
       <ReasonModal
         v-model:open="suspendOpen"
         title="Suspender organização"
-        :description="`${organization.name} não poderá abrir turno; turnos já abertos seguem até o fechamento. O dono verá uma faixa no painel com o motivo.`"
+        :description="`${organization.name} não poderá abrir caixa; caixas já abertos seguem até o fechamento. O dono verá uma faixa no painel com o motivo.`"
         confirm-label="Suspender"
         destructive
         reason-help="Vai para a auditoria e aparece para o dono."
@@ -340,7 +344,7 @@ const canResendInvite = computed(
       <ReasonModal
         v-model:open="reactivateOpen"
         title="Reativar organização"
-        :description="`${organization.name} volta a poder abrir turnos.`"
+        :description="`${organization.name} volta a poder abrir caixa.`"
         confirm-label="Reativar"
         status-label="Voltar para"
         :status-options="reactivateOptions"
