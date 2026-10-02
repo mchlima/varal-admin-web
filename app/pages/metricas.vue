@@ -1,9 +1,9 @@
 <script setup lang="ts">
 /**
  * Métricas (spec 02, seção 6): período em dias de Brasília, padrão últimos
- * 30 dias; indicadores e uso por organização, ordenável. Turnos, comandas e
- * valores ficam em zero até o balcão e o caixa (specs 04 a 06) existirem: a
- * tela diz isso em vez de parecer um erro.
+ * 30 dias; indicadores e uso por organização, ordenável. Dias de operação
+ * (pares unidade e dia com caixa aberto), comandas e valores ficam em zero
+ * enquanto ninguém opera: a tela diz isso em vez de parecer um erro.
  */
 definePageMeta({ permission: 'metrics:read' })
 useHead({ title: 'Métricas' })
@@ -74,7 +74,7 @@ onMounted(load)
 
 const columns: { key: SortKey; label: string; numeric: boolean }[] = [
   { key: 'name', label: 'Organização', numeric: false },
-  { key: 'shifts', label: 'Turnos', numeric: true },
+  { key: 'operationDays', label: 'Dias de operação', numeric: true },
   { key: 'tabs', label: 'Comandas', numeric: true },
   { key: 'soldCents', label: 'Valor vendido', numeric: true },
   { key: 'lastAccessAt', label: 'Último acesso', numeric: false },
@@ -85,9 +85,12 @@ function ariaSort(key: SortKey): 'ascending' | 'descending' | 'none' {
   return order.value === 'asc' ? 'ascending' : 'descending'
 }
 
-/** Ainda não há turnos nem comandas no período: specs 04 a 06 por vir. */
+/** Ainda não há dias de operação nem comandas no período. */
 const operationsPending = computed(
-  () => overview.value !== null && overview.value.shifts.total === 0 && overview.value.tabs === 0,
+  () =>
+    overview.value !== null &&
+    overview.value.operationDays.total === 0 &&
+    overview.value.tabs === 0,
 )
 </script>
 
@@ -158,8 +161,8 @@ const operationsPending = computed(
           aria-hidden="true"
         />
         <p>
-          <strong>Turnos, comandas e valores ainda estão em zero</strong> porque o balcão, a cozinha
-          e o caixa entram nas próximas fases. Organizações e último acesso já são dados reais.
+          <strong>Dias de operação, comandas e valores estão em zero</strong> porque nenhuma
+          organização abriu caixa no período. Organizações e último acesso já são dados reais.
         </p>
       </div>
 
@@ -169,11 +172,12 @@ const operationsPending = computed(
           <div class="metric">
             <dt>Organizações ativas no período</dt>
             <dd>{{ formatCount(overview.activeOrganizations) }}</dd>
-            <p class="metric-help">Com pelo menos um turno aberto</p>
+            <p class="metric-help">Com pelo menos um caixa aberto</p>
           </div>
           <div class="metric">
-            <dt>Turnos fechados</dt>
-            <dd>{{ formatCount(overview.shifts.total) }}</dd>
+            <dt>Dias de operação</dt>
+            <dd>{{ formatCount(overview.operationDays.total) }}</dd>
+            <p class="metric-help">Unidade e dia com caixa aberto</p>
           </div>
           <div class="metric">
             <dt>Comandas</dt>
@@ -207,8 +211,8 @@ const operationsPending = computed(
         </ul>
       </section>
 
-      <section aria-labelledby="turnos-por-semana" class="flex flex-col gap-3">
-        <h2 id="turnos-por-semana" class="text-lg font-semibold">Turnos fechados por semana</h2>
+      <section aria-labelledby="dias-por-semana" class="flex flex-col gap-3">
+        <h2 id="dias-por-semana" class="text-lg font-semibold">Dias de operação por semana</h2>
         <div
           class="relative overflow-x-auto rounded-(--radius-card) border border-(--color-border) bg-(--color-surface)"
         >
@@ -216,12 +220,12 @@ const operationsPending = computed(
             <thead class="bg-(--color-surface-muted) text-sm">
               <tr>
                 <th scope="col" class="px-4 py-3">Semana de</th>
-                <th scope="col" class="px-4 py-3 text-right">Turnos</th>
+                <th scope="col" class="px-4 py-3 text-right">Dias de operação</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="week in overview.shifts.byWeek"
+                v-for="week in overview.operationDays.byWeek"
                 :key="week.weekStart"
                 class="border-t border-(--color-border)"
               >
@@ -293,7 +297,7 @@ const operationsPending = computed(
                     />
                   </div>
                 </td>
-                <td class="px-4 py-2 text-right">{{ formatCount(row.shifts) }}</td>
+                <td class="px-4 py-2 text-right">{{ formatCount(row.operationDays) }}</td>
                 <td class="px-4 py-2 text-right">{{ formatCount(row.tabs) }}</td>
                 <td class="px-4 py-2 text-right">{{ formatCents(row.soldCents) }}</td>
                 <td class="px-4 py-2">{{ formatDateTime(row.lastAccessAt, 'Sem acesso') }}</td>
