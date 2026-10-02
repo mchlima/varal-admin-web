@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/mchlima/varal-admin-web/compare/v0.3.0...v0.4.0) (2026-10-02)
+
+
+### Features
+
+* **metrics:** troca turnos por dias de operação no admin (fase 7.5) ([#19](https://github.com/mchlima/varal-admin-web/issues/19)) ([c7136be](https://github.com/mchlima/varal-admin-web/commit/c7136be4b67818d53288df89bba0afaaab6296bc))
+
 ## [0.3.0](https://github.com/mchlima/varal-admin-web/compare/v0.2.1...v0.3.0) (2026-10-01)
 
 
